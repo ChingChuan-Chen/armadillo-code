@@ -566,15 +566,15 @@ diskio::save_raw_ascii(const Mat<eT>& x, std::ostream& f)
     {
     f.unsetf(ios::fixed);
     f.setf(ios::scientific);
-    f.precision(14);
-    cell_width = 22;
+    f.precision(16);
+    cell_width = 24;
     }
   
   if(is_cx<eT>::value)
     {
     f.unsetf(ios::fixed);
     f.setf(ios::scientific);
-    f.precision(14);
+    f.precision(16);
     }
   
   for(uword row=0; row < x.n_rows; ++row)
@@ -689,15 +689,15 @@ diskio::save_arma_ascii(const Mat<eT>& x, std::ostream& f)
     {
     f.unsetf(ios::fixed);
     f.setf(ios::scientific);
-    f.precision(14);
-    cell_width = 22;
+    f.precision(16);
+    cell_width = 24;
     }
   
   if(is_cx<eT>::value)
     {
     f.unsetf(ios::fixed);
     f.setf(ios::scientific);
-    f.precision(14);
+    f.precision(16);
     }
   
   for(uword row=0; row < x.n_rows; ++row)
@@ -766,7 +766,7 @@ diskio::save_csv_ascii(const Mat<eT>& x, std::ostream& f)
     {
     f.unsetf(ios::fixed);
     f.setf(ios::scientific);
-    f.precision(14);
+    f.precision(16);
     }
   
   uword x_n_rows = x.n_rows;
@@ -809,7 +809,7 @@ diskio::save_csv_ascii(const Mat< std::complex<T> >& x, std::ostream& f)
     {
     f.unsetf(ios::fixed);
     f.setf(ios::scientific);
-    f.precision(14);
+    f.precision(16);
     }
   
   uword x_n_rows = x.n_rows;
@@ -2252,7 +2252,7 @@ diskio::save_csv_ascii(const SpMat<eT>& x, std::ostream& f)
     {
     f.unsetf(ios::fixed);
     f.setf(ios::scientific);
-    f.precision(14);
+    f.precision(16);
     }
   
   x.sync();
@@ -2344,7 +2344,7 @@ diskio::save_coord_ascii(const SpMat<eT>& x, std::ostream& f)
     {
     f.unsetf(ios::fixed);
     f.setf(ios::scientific);
-    f.precision(14);
+    f.precision(16);
     }
     
   typename SpMat<eT>::const_iterator iter     = x.begin();
@@ -2393,7 +2393,7 @@ diskio::save_coord_ascii(const SpMat< std::complex<T> >& x, std::ostream& f)
     {
     f.unsetf(ios::fixed);
     f.setf(ios::scientific);
-    f.precision(14);
+    f.precision(16);
     }
   
   typename SpMat<eT>::const_iterator iter     = x.begin();
@@ -3005,15 +3005,15 @@ diskio::save_raw_ascii(const Cube<eT>& x, std::ostream& f)
     {
     f.unsetf(ios::fixed);
     f.setf(ios::scientific);
-    f.precision(14);
-    cell_width = 22;
+    f.precision(16);
+    cell_width = 24;
     }
   
   if(is_cx<eT>::value)
     {
     f.unsetf(ios::fixed);
     f.setf(ios::scientific);
-    f.precision(14);
+    f.precision(16);
     }
   
   for(uword slice=0; slice < x.n_slices; ++slice)
@@ -3134,15 +3134,15 @@ diskio::save_arma_ascii(const Cube<eT>& x, std::ostream& f)
     {
     f.unsetf(ios::fixed);
     f.setf(ios::scientific);
-    f.precision(14);
-    cell_width = 22;
+    f.precision(16);
+    cell_width = 24;
     }
   
   if(is_cx<eT>::value)
     {
     f.unsetf(ios::fixed);
     f.setf(ios::scientific);
-    f.precision(14);
+    f.precision(16);
     }
   
   for(uword slice=0; slice < x.n_slices; ++slice)
