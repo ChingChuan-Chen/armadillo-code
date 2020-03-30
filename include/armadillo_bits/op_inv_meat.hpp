@@ -71,9 +71,21 @@ op_inv::apply_noalias(Mat<eT>& out, const Mat<eT>& A)
     status = auxlib::inv_tiny(out, A);
     }
   else
-  if(sympd_helper::guess_sympd(A))
     {
-    status = auxlib::inv_sympd(out, A);
+    #if defined(ARMA_OPTIMISE_SOLVE_SYMPD)
+      const bool try_sympd = sympd_helper::guess_sympd(A);
+    #else
+      const bool try_sympd = false;
+    #endif
+    
+    if(try_sympd)
+      {
+      status = auxlib::inv_sympd(out, A);
+      
+      if(status == false)  { arma_extra_debug_print("warning: sympd optimisation failed"); }
+      }
+    
+    // auxlib::inv_sympd() may have failed because A isn't really sympd
     }
   
   if(status == false)
