@@ -274,8 +274,10 @@ glue_solve_gen::apply(Mat<eT>& out, const Base<eT,T1>& A_expr, const Base<eT,T2>
       {
       status = auxlib::solve_approx_fast(out, A, B_expr.get_ref());  // A is overwritten
       
-      if(status == false)
+      if( (status == false) && (no_approx == false) )
         {
+        arma_extra_debug_print("glue_solve_gen::apply(): solving rank deficient system");
+        
         A = A_expr.get_ref();  // as A was overwritten
         
         status = auxlib::solve_approx_svd(out, A, B_expr.get_ref());  // A is overwritten
