@@ -139,19 +139,19 @@ eig_gen
   )
   {
   arma_extra_debug_sigprint();
-
-  arma_debug_check( (void_ptr(& eigvals) == void_ptr(&leigvecs)), "eig_gen(): parameter 'eigval' is an alias of parameter 'leigvec'" );
-  arma_debug_check( (void_ptr(& eigvals) == void_ptr(&reigvecs)), "eig_gen(): parameter 'eigval' is an alias of parameter 'reigvec'" );
+  
+  arma_debug_check( (void_ptr(&eigvals)  == void_ptr(&leigvecs)), "eig_gen(): parameter 'eigval' is an alias of parameter 'leigvec'" );
+  arma_debug_check( (void_ptr(&eigvals)  == void_ptr(&reigvecs)), "eig_gen(): parameter 'eigval' is an alias of parameter 'reigvec'" );
   arma_debug_check( (void_ptr(&leigvecs) == void_ptr(&reigvecs)), "eig_gen(): parameter 'leigvec' is an alias of parameter 'reigvec'" );
-
+  
   const char sig = (option != NULL) ? option[0] : char(0);
-
+  
   arma_debug_check( ((sig != 'n') && (sig != 'b')), "eig_gen(): unknown option" );
-
+  
   if( auxlib::crippled_lapack(expr) && (sig == 'b') )  { arma_debug_warn( "eig_gen(): 'balance' option ignored due to linking with crippled lapack"); }
-
+  
   const bool status = (sig == 'b') ? auxlib::eig_gen_twosided_balance(eigvals, leigvecs, reigvecs, expr.get_ref()) : auxlib::eig_gen_twosided(eigvals, leigvecs, reigvecs, expr.get_ref());
-
+  
   if(status == false)
     {
      eigvals.soft_reset();
@@ -159,7 +159,7 @@ eig_gen
     reigvecs.soft_reset();
     arma_debug_warn("eig_gen(): decomposition failed");
     }
-
+  
   return status;
   }
 
