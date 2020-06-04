@@ -1148,7 +1148,7 @@ auxlib::eig_gen_balance
     blas_int ilo   = blas_int(0);
     blas_int ihi   = blas_int(0);
     T        abnrm = T(0);
-    blas_int lwork = 64*N;  // lwork_min = (std::max)(blas_int(1), blas_int(2*N))
+    blas_int lwork = 64*N;  // lwork_min = (vecs_on) ? (std::max)(blas_int(1), 2*N) : (std::max)(blas_int(1), 3*N)
     blas_int info  = blas_int(0);
     
     podarray<T>  scale(X.n_rows);
@@ -1530,7 +1530,7 @@ auxlib::eig_gen_twosided_balance
     blas_int ilo   = blas_int(0);
     blas_int ihi   = blas_int(0);
     T        abnrm = T(0);
-    blas_int lwork = 64*N;  // lwork_min = (std::max)(blas_int(1), blas_int(2*N))
+    blas_int lwork = 64*N;  // lwork_min = (std::max)(blas_int(1), blas_int(3*N))
     blas_int info  = blas_int(0);
     
     podarray<T>  scale(X.n_rows);
