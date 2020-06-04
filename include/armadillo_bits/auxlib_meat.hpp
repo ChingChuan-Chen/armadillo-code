@@ -1314,17 +1314,17 @@ auxlib::eig_gen_twosided
   )
   {
   arma_extra_debug_sigprint();
-
+  
   #if defined(ARMA_USE_LAPACK)
     {
     typedef typename T1::pod_type T;
-
+    
     Mat<T> X = expr.get_ref();
-
+    
     arma_debug_check( (X.is_square() == false), "eig_gen(): given matrix must be square sized" );
-
+    
     arma_debug_assert_blas_size(X);
-
+    
     if(X.is_empty())
       {
        vals.reset();
@@ -1332,46 +1332,42 @@ auxlib::eig_gen_twosided
       rvecs.reset();
       return true;
       }
-
+    
     if(X.is_finite() == false)  { return false; }
-
+    
     vals.set_size(X.n_rows, 1);
-
-    Mat<T> ltmp(1,1);
-    Mat<T> rtmp(1,1);
-
+    
     lvecs.set_size(X.n_rows, X.n_rows);
-    ltmp .set_size(X.n_rows, X.n_rows);
     rvecs.set_size(X.n_rows, X.n_rows);
-    rtmp .set_size(X.n_rows, X.n_rows);
-
+    
+    Mat<T> ltmp(X.n_rows, X.n_rows);
+    Mat<T> rtmp(X.n_rows, X.n_rows);
+    
     char     jobvl = 'V';
     char     jobvr = 'V';
     blas_int N     = blas_int(X.n_rows);
-    T*       vl    = ltmp.memptr();
-    T*       vr    = rtmp.memptr();
     blas_int ldvl  = blas_int(ltmp.n_rows);
     blas_int ldvr  = blas_int(rtmp.n_rows);
-    blas_int lwork = 64*N;  // lwork_min = (vecs_on) ? (std::max)(blas_int(1), 4*N) : (std::max)(blas_int(1), 3*N)
+    blas_int lwork = 64*N;  // lwork_min = (std::max)(blas_int(1), 4*N)
     blas_int info  = 0;
-
+    
     podarray<T> work( static_cast<uword>(lwork) );
-
+    
     podarray<T> vals_real(X.n_rows);
     podarray<T> vals_imag(X.n_rows);
-
+    
     arma_extra_debug_print("lapack::geev() -- START");
-    lapack::geev(&jobvl, &jobvr, &N, X.memptr(), &N, vals_real.memptr(), vals_imag.memptr(), vl, &ldvl, vr, &ldvr, work.memptr(), &lwork, &info);
+    lapack::geev(&jobvl, &jobvr, &N, X.memptr(), &N, vals_real.memptr(), vals_imag.memptr(), ltmp.memptr(), &ldvl, rtmp.memptr(), &ldvr, work.memptr(), &lwork, &info);
     arma_extra_debug_print("lapack::geev() -- END");
-
+    
     if(info != 0)  { return false; }
-
+    
     arma_extra_debug_print("reformatting eigenvalues and eigenvectors");
-
+    
     std::complex<T>* vals_mem = vals.memptr();
-
+    
     for(uword i=0; i < X.n_rows; ++i)  { vals_mem[i] = std::complex<T>(vals_real[i], vals_imag[i]); }
-
+    
     for(uword j=0; j < X.n_rows; ++j)
       {
       if( (j < (X.n_rows-1)) && (vals_mem[j] == std::conj(vals_mem[j+1])) )
@@ -1394,7 +1390,7 @@ auxlib::eig_gen_twosided
           }
         }
       }
-
+    
     return true;
     }
   #else
@@ -1424,18 +1420,18 @@ auxlib::eig_gen_twosided
   )
   {
   arma_extra_debug_sigprint();
-
+  
   #if defined(ARMA_USE_LAPACK)
     {
     typedef typename T1::pod_type     T;
     typedef typename std::complex<T> eT;
-
+    
     Mat<eT> X = expr.get_ref();
-
+    
     arma_debug_check( (X.is_square() == false), "eig_gen(): given matrix must be square sized" );
-
+    
     arma_debug_assert_blas_size(X);
-
+    
     if(X.is_empty())
       {
        vals.reset();
@@ -1443,31 +1439,29 @@ auxlib::eig_gen_twosided
       rvecs.reset();
       return true;
       }
-
+    
     if(X.is_finite() == false)  { return false; }
-
+    
     vals.set_size(X.n_rows, 1);
-
+    
     lvecs.set_size(X.n_rows, X.n_rows);
     rvecs.set_size(X.n_rows, X.n_rows);
-
+    
     char     jobvl = 'V';
     char     jobvr = 'V';
     blas_int N     = blas_int(X.n_rows);
-    eT*      vl    = lvecs.memptr();
-    eT*      vr    = rvecs.memptr();
     blas_int ldvl  = blas_int(lvecs.n_rows);
     blas_int ldvr  = blas_int(rvecs.n_rows);
     blas_int lwork = 64*N;  // lwork_min = (std::max)(blas_int(1), 2*N)
     blas_int info  = 0;
-
+    
     podarray<eT>  work( static_cast<uword>(lwork) );
     podarray< T> rwork( static_cast<uword>(2*N)   );
-
+    
     arma_extra_debug_print("lapack::cx_geev() -- START");
-    lapack::cx_geev(&jobvl, &jobvr, &N, X.memptr(), &N, vals.memptr(), vl, &ldvl, vr, &ldvr, work.memptr(), &lwork, rwork.memptr(), &info);
+    lapack::cx_geev(&jobvl, &jobvr, &N, X.memptr(), &N, vals.memptr(), lvecs.memptr(), &ldvl, rvecs.memptr(), &ldvr, work.memptr(), &lwork, rwork.memptr(), &info);
     arma_extra_debug_print("lapack::cx_geev() -- END");
-
+    
     return (info == 0);
     }
   #else
@@ -1497,17 +1491,17 @@ auxlib::eig_gen_twosided_balance
   )
   {
   arma_extra_debug_sigprint();
-
+  
   #if defined(ARMA_USE_LAPACK)
     {
     typedef typename T1::pod_type T;
-
+    
     Mat<T> X = expr.get_ref();
-
+    
     arma_debug_check( (X.is_square() == false), "eig_gen(): given matrix must be square sized" );
-
+    
     arma_debug_assert_blas_size(X);
-
+    
     if(X.is_empty())
       {
        vals.reset();
@@ -1515,26 +1509,22 @@ auxlib::eig_gen_twosided_balance
       rvecs.reset();
       return true;
       }
-
+    
     if(X.is_finite() == false)  { return false; }
-
+    
     vals.set_size(X.n_rows, 1);
-
-    Mat<T> ltmp(1,1);
-    Mat<T> rtmp(1,1);
-
+    
     lvecs.set_size(X.n_rows, X.n_rows);
-    ltmp .set_size(X.n_rows, X.n_rows);
     rvecs.set_size(X.n_rows, X.n_rows);
-    rtmp .set_size(X.n_rows, X.n_rows);
-
+    
+    Mat<T> ltmp(X.n_rows, X.n_rows);
+    Mat<T> rtmp(X.n_rows, X.n_rows);
+    
     char     bal   = 'B';
     char     jobvl = 'V';
     char     jobvr = 'V';
     char     sense = 'N';
     blas_int N     = blas_int(X.n_rows);
-    T*       vl    = ltmp.memptr();
-    T*       vr    = rtmp.memptr();
     blas_int ldvl  = blas_int(ltmp.n_rows);
     blas_int ldvr  = blas_int(rtmp.n_rows);
     blas_int ilo   = blas_int(0);
@@ -1542,29 +1532,29 @@ auxlib::eig_gen_twosided_balance
     T        abnrm = T(0);
     blas_int lwork = 64*N;  // lwork_min = (std::max)(blas_int(1), blas_int(2*N))
     blas_int info  = blas_int(0);
-
+    
     podarray<T>  scale(X.n_rows);
     podarray<T> rconde(X.n_rows);
     podarray<T> rcondv(X.n_rows);
-
+    
     podarray<T>         work( static_cast<uword>(lwork) );
     podarray<blas_int> iwork( uword(1) );  // iwork not used by lapack::geevx() as sense = 'N'
-
+    
     podarray<T> vals_real(X.n_rows);
     podarray<T> vals_imag(X.n_rows);
-
+    
     arma_extra_debug_print("lapack::geevx() -- START");
-    lapack::geevx(&bal, &jobvl, &jobvr, &sense, &N, X.memptr(), &N, vals_real.memptr(), vals_imag.memptr(), vl, &ldvl, vr, &ldvr, &ilo, &ihi, scale.memptr(), &abnrm, rconde.memptr(), rcondv.memptr(), work.memptr(), &lwork, iwork.memptr(), &info);
+    lapack::geevx(&bal, &jobvl, &jobvr, &sense, &N, X.memptr(), &N, vals_real.memptr(), vals_imag.memptr(), ltmp.memptr(), &ldvl, rtmp.memptr(), &ldvr, &ilo, &ihi, scale.memptr(), &abnrm, rconde.memptr(), rcondv.memptr(), work.memptr(), &lwork, iwork.memptr(), &info);
     arma_extra_debug_print("lapack::geevx() -- END");
-
+    
     if(info != 0)  { return false; }
-
+    
     arma_extra_debug_print("reformatting eigenvalues and eigenvectors");
-
+    
     std::complex<T>* vals_mem = vals.memptr();
-
+    
     for(uword i=0; i < X.n_rows; ++i)  { vals_mem[i] = std::complex<T>(vals_real[i], vals_imag[i]); }
-
+    
     for(uword j=0; j < X.n_rows; ++j)
       {
       if( (j < (X.n_rows-1)) && (vals_mem[j] == std::conj(vals_mem[j+1])) )
@@ -1587,7 +1577,7 @@ auxlib::eig_gen_twosided_balance
           }
         }
       }
-
+    
     return true;
     }
   #else
@@ -1617,24 +1607,24 @@ auxlib::eig_gen_twosided_balance
   )
   {
   arma_extra_debug_sigprint();
-
+  
   #if defined(ARMA_CRIPPLED_LAPACK)
     {
-    arma_extra_debug_print("auxlib::eig_gen_balance(): redirecting to auxlib::eig_gen() due to crippled LAPACK");
-
+    arma_extra_debug_print("auxlib::eig_gen_twosided_balance(): redirecting to auxlib::eig_gen() due to crippled LAPACK");
+    
     return auxlib::eig_gen(vals, lvecs, rvecs, expr);
     }
   #elif defined(ARMA_USE_LAPACK)
     {
     typedef typename T1::pod_type     T;
     typedef typename std::complex<T> eT;
-
+    
     Mat<eT> X = expr.get_ref();
-
+    
     arma_debug_check( (X.is_square() == false), "eig_gen(): given matrix must be square sized" );
-
+    
     arma_debug_assert_blas_size(X);
-
+    
     if(X.is_empty())
       {
        vals.reset();
@@ -1642,21 +1632,19 @@ auxlib::eig_gen_twosided_balance
       rvecs.reset();
       return true;
       }
-
+    
     if(X.is_finite() == false)  { return false; }
-
+    
     vals.set_size(X.n_rows, 1);
-
+    
     lvecs.set_size(X.n_rows, X.n_rows);
     rvecs.set_size(X.n_rows, X.n_rows);
-
+    
     char     bal   = 'B';
     char     jobvl = 'V';
     char     jobvr = 'V';
     char     sense = 'N';
     blas_int N     = blas_int(X.n_rows);
-    eT*      vl    = lvecs.memptr();
-    eT*      vr    = rvecs.memptr();
     blas_int ldvl  = blas_int(lvecs.n_rows);
     blas_int ldvr  = blas_int(rvecs.n_rows);
     blas_int ilo   = blas_int(0);
@@ -1664,18 +1652,18 @@ auxlib::eig_gen_twosided_balance
     T        abnrm = T(0);
     blas_int lwork = 64*N;  // lwork_min = (std::max)(blas_int(1), blas_int(2*N))
     blas_int info  = blas_int(0);
-
+    
     podarray<T>  scale(X.n_rows);
     podarray<T> rconde(X.n_rows);
     podarray<T> rcondv(X.n_rows);
-
+    
     podarray<eT>  work( static_cast<uword>(lwork) );
     podarray< T> rwork( static_cast<uword>(2*N)   );
-
+    
     arma_extra_debug_print("lapack::cx_geevx() -- START");
-    lapack::cx_geevx(&bal, &jobvl, &jobvr, &sense, &N, X.memptr(), &N, vals.memptr(), vl, &ldvl, vr, &ldvr, &ilo, &ihi, scale.memptr(), &abnrm, rconde.memptr(), rcondv.memptr(), work.memptr(), &lwork, rwork.memptr(), &info);
+    lapack::cx_geevx(&bal, &jobvl, &jobvr, &sense, &N, X.memptr(), &N, vals.memptr(), lvecs.memptr(), &ldvl, rvecs.memptr(), &ldvr, &ilo, &ihi, scale.memptr(), &abnrm, rconde.memptr(), rcondv.memptr(), work.memptr(), &lwork, rwork.memptr(), &info);
     arma_extra_debug_print("lapack::cx_geevx() -- END");
-
+    
     return (info == 0);
     }
   #else
@@ -1951,21 +1939,21 @@ auxlib::eig_pair_twosided
   )
   {
   arma_extra_debug_sigprint();
-
+  
   #if defined(ARMA_USE_LAPACK)
     {
     typedef typename T1::pod_type  T;
     typedef std::complex<T>       eT;
-
+    
     Mat<T> A(A_expr.get_ref());
     Mat<T> B(B_expr.get_ref());
-
+    
     arma_debug_check( ((A.is_square() == false) || (B.is_square() == false)), "eig_pair(): given matrices must be square sized" );
-
+    
     arma_debug_check( (A.n_rows != B.n_rows), "eig_pair(): given matrices must have the same size" );
-
+    
     arma_debug_assert_blas_size(A);
-
+    
     if(A.is_empty())
       {
        vals.reset();
@@ -1973,71 +1961,67 @@ auxlib::eig_pair_twosided
       rvecs.reset();
       return true;
       }
-
+    
     if(A.is_finite() == false)  { return false; }
     if(B.is_finite() == false)  { return false; }
-
+    
     vals.set_size(A.n_rows, 1);
-
-    Mat<T> ltmp(1,1);
-    Mat<T> rtmp(1,1);
-
+    
     lvecs.set_size(A.n_rows, A.n_rows);
-    ltmp. set_size(A.n_rows, A.n_rows);
     rvecs.set_size(A.n_rows, A.n_rows);
-    rtmp. set_size(A.n_rows, A.n_rows);
-
+    
+    Mat<T> ltmp(A.n_rows, A.n_rows);
+    Mat<T> rtmp(A.n_rows, A.n_rows);
+    
     char     jobvl = 'V';
     char     jobvr = 'V';
     blas_int N     = blas_int(A.n_rows);
-    T*       vl    = ltmp.memptr();
-    T*       vr    = rtmp.memptr();
     blas_int ldvl  = blas_int(ltmp.n_rows);
     blas_int ldvr  = blas_int(rtmp.n_rows);
     blas_int lwork = 64*N;  // lwork_min = (std::max)(blas_int(1), 8*N)
     blas_int info  = 0;
-
+    
     podarray<T> alphar(A.n_rows);
     podarray<T> alphai(A.n_rows);
     podarray<T>   beta(A.n_rows);
-
+    
     podarray<T> work( static_cast<uword>(lwork) );
-
+    
     arma_extra_debug_print("lapack::ggev()");
-    lapack::ggev(&jobvl, &jobvr, &N, A.memptr(), &N,  B.memptr(), &N, alphar.memptr(), alphai.memptr(), beta.memptr(), vl, &ldvl, vr, &ldvr, work.memptr(), &lwork, &info);
-
+    lapack::ggev(&jobvl, &jobvr, &N, A.memptr(), &N,  B.memptr(), &N, alphar.memptr(), alphai.memptr(), beta.memptr(), ltmp.memptr(), &ldvl, rtmp.memptr(), &ldvr, work.memptr(), &lwork, &info);
+    
     if(info != 0)  { return false; }
-
+    
     arma_extra_debug_print("reformatting eigenvalues and eigenvectors");
-
+    
           eT*   vals_mem =   vals.memptr();
     const  T* alphar_mem = alphar.memptr();
     const  T* alphai_mem = alphai.memptr();
     const  T*   beta_mem =   beta.memptr();
-
+    
     bool beta_has_zero = false;
-
+    
     for(uword j=0; j<A.n_rows; ++j)
       {
       const T alphai_val = alphai_mem[j];
       const T   beta_val =   beta_mem[j];
-
+      
       const T re = alphar_mem[j] / beta_val;
       const T im = alphai_val    / beta_val;
-
+      
       beta_has_zero = (beta_has_zero || (beta_val == T(0)));
-
+      
       vals_mem[j] = std::complex<T>(re, im);
-
+      
       if( (alphai_val > T(0)) && (j < (A.n_rows-1)) )
         {
         ++j;
         vals_mem[j] = std::complex<T>(re,-im);  // force exact conjugate
         }
       }
-
+    
     if(beta_has_zero)  { arma_debug_warn("eig_pair(): given matrices appear ill-conditioned"); }
-
+    
     for(uword j=0; j < A.n_rows; ++j)
       {
       if( (j < (A.n_rows-1)) && (vals_mem[j] == std::conj(vals_mem[j+1])) )
@@ -2060,7 +2044,7 @@ auxlib::eig_pair_twosided
           }
         }
       }
-
+    
     return true;
     }
   #else
@@ -2092,21 +2076,21 @@ auxlib::eig_pair_twosided
   )
   {
   arma_extra_debug_sigprint();
-
+  
   #if defined(ARMA_USE_LAPACK)
     {
     typedef typename T1::pod_type     T;
     typedef typename std::complex<T> eT;
-
+    
     Mat<eT> A(A_expr.get_ref());
     Mat<eT> B(B_expr.get_ref());
-
+    
     arma_debug_check( ((A.is_square() == false) || (B.is_square() == false)), "eig_pair(): given matrices must be square sized" );
-
+    
     arma_debug_check( (A.n_rows != B.n_rows), "eig_pair(): given matrices must have the same size" );
-
+    
     arma_debug_assert_blas_size(A);
-
+    
     if(A.is_empty())
       {
        vals.reset();
@@ -2114,55 +2098,53 @@ auxlib::eig_pair_twosided
       rvecs.reset();
       return true;
       }
-
+    
     if(A.is_finite() == false)  { return false; }
     if(B.is_finite() == false)  { return false; }
-
+    
     vals.set_size(A.n_rows, 1);
-
+    
     lvecs.set_size(A.n_rows, A.n_rows);
     rvecs.set_size(A.n_rows, A.n_rows);
-
+    
     char     jobvl = 'V';
     char     jobvr = 'V';
     blas_int N     = blas_int(A.n_rows);
-    eT*      vl    = lvecs.memptr();
-    eT*      vr    = rvecs.memptr();
     blas_int ldvl  = blas_int(lvecs.n_rows);
     blas_int ldvr  = blas_int(rvecs.n_rows);
     blas_int lwork = 64*N;  // lwork_min = (std::max)(blas_int(1),2*N)
     blas_int info  = 0;
-
+    
     podarray<eT> alpha(A.n_rows);
     podarray<eT>  beta(A.n_rows);
-
+    
     podarray<eT>  work( static_cast<uword>(lwork) );
     podarray<T>  rwork( static_cast<uword>(8*N)   );
-
+    
     arma_extra_debug_print("lapack::cx_ggev()");
-    lapack::cx_ggev(&jobvl, &jobvr, &N, A.memptr(), &N, B.memptr(), &N, alpha.memptr(), beta.memptr(), vl, &ldvl, vr, &ldvr, work.memptr(), &lwork, rwork.memptr(), &info);
-
+    lapack::cx_ggev(&jobvl, &jobvr, &N, A.memptr(), &N, B.memptr(), &N, alpha.memptr(), beta.memptr(), lvecs.memptr(), &ldvl, rvecs.memptr(), &ldvr, work.memptr(), &lwork, rwork.memptr(), &info);
+    
     if(info != 0)  { return false; }
-
+    
           eT*   vals_mem =  vals.memptr();
     const eT*  alpha_mem = alpha.memptr();
     const eT*   beta_mem =  beta.memptr();
-
+    
     const std::complex<T> zero(T(0), T(0));
-
+    
     bool beta_has_zero = false;
-
+    
     for(uword i=0; i<A.n_rows; ++i)
       {
       const eT& beta_val = beta_mem[i];
-
+      
       vals_mem[i] = alpha_mem[i] / beta_val;
-
+      
       beta_has_zero = (beta_has_zero || (beta_val == zero));
       }
-
+    
     if(beta_has_zero)  { arma_debug_warn("eig_pair(): given matrices appear ill-conditioned"); }
-
+    
     return true;
     }
   #else
