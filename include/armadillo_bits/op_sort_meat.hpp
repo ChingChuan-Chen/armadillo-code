@@ -212,20 +212,28 @@ op_sort_vec::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_sort_vec>& i
   
   const Mat<eT>& X = U.M;
   
-  const uword sort_type = in.aux_uword_a;
-  const uword dim       = (T1::is_xvec) ? uword(U.M.is_rowvec() ? 1 : 0) : uword((T1::is_row) ? 1 : 0);
+  arma_debug_check( (X.has_nan()), "sort(): detected NaN" );
   
-  if(U.is_alias(out))
+  out = X;
+  
+  if(out.n_elem <= 1)  { return; }
+  
+  eT* start_ptr = &out[0];
+  eT* endp1_ptr = &out[out.n_elem];
+  
+  const uword sort_type = in.aux_uword_a;
+  
+  if(sort_type == 0)
     {
-    Mat<eT> tmp;
+    arma_lt_comparator<eT> comparator;
     
-    op_sort::apply_noalias(tmp, X, sort_type, dim);
-    
-    out.steal_mem(tmp);
+    std::sort(start_ptr, endp1_ptr, comparator);
     }
   else
     {
-    op_sort::apply_noalias(out, X, sort_type, dim);
+    arma_gt_comparator<eT> comparator;
+    
+    std::sort(start_ptr, endp1_ptr, comparator);
     }
   }
 
