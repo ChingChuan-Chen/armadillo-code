@@ -18901,47 +18901,22 @@ List of additions and changes for each version:
 <ul>
 <li>faster <a href="#solve">solve()</a> for under/over-determined systems</li>
 <li>faster <a href="#eig_gen">eig_gen()</a> and <a href="#eig_pair">eig_pair()</a> for large matrices</li>
-<li>expanded <a href="#eig_gen">eig_gen()</a> and <a href="#eig_pair">eig_pair()</a> to optionally provide left and right eigenvectors</li>
-</ul>
-</li>
-<br>
-<a name="version_9880"></a>
-<li>Version 9.880:
-<ul>
-<li>expanded <a href="#qr">qr()</a> to optionally use pivoted decomposition</li>
-<li>updated <a href="#constants">physical constants</a> to NIST 2018 CODATA values</li>
-<li>added <code>ARMA_DONT_USE_CXX11_MUTEX</code> <a href="#config_hpp">configuration option</a> to disable use of <i>std::mutex</i></li>
-</ul>
-</li>
-<br>
-<a name="version_9870"></a>
-<li>Version 9.870:
-<ul>
 <li>faster handling of matrix multiplication expressions by <a href="#diagvec">diagvec()</a> and <a href="#diagmat">diagmat()</a></li>
-<li>added <a href="#trimat_ind">trimatu_ind()</a> and <a href="#trimat_ind">trimatl_ind()</a></li>
-<li>more consistent detection of sparse vector expressions</li>
-</ul>
-</li>
-<br>
-<a name="version_9860"></a>
-<li>Version 9.860:
-<ul>
-<li>added <a href="#powmat">powmat()</a></li>
-<li>faster access to columns in sparse submatrix views</li>
 <li>faster handling of relational expressions by <a href="#accu">accu()</a></li>
 <li>faster handling of sympd matrices by <a href="#expmat">expmat()</a>, <a href="#logmat">logmat()</a>, <a href="#sqrtmat">sqrtmat()</a></li>
-<li>workaround for <a href="#save_load_mat">save/load</a> issues with HDF5 v1.12</li>
-</ul>
-</li>
-<br>
-<a name="version_9850"></a>
-<li>Version 9.850:
-<ul>
-<li>faster handling of compound expressions by <a href="#diagmat">diagmat()</a></li>
-<li>expanded <a href="#save_load_mat">.save()</a> and <a href="#save_load_mat">.load()</a> to handle CSV files with headers via <i>csv_name(filename,header)</i> specification</li>
+<li>faster access to columns in sparse submatrix views</li>
+<li>added <a href="#quantile">quantile()</a></li>
+<li>added <a href="#powmat">powmat()</a></li>
+<li>added <a href="#trimat_ind">trimatu_ind()</a> and <a href="#trimat_ind">trimatl_ind()</a></li>
 <li>added <a href="#log_normpdf">log_normpdf()</a></li>
 <li>added <a href="#is_zero">.is_zero()</a></li>
-<li>added <a href="#quantile">quantile()</a></li>
+<li>added <code>ARMA_DONT_USE_CXX11_MUTEX</code> <a href="#config_hpp">configuration option</a> to disable use of <i>std::mutex</i></li>
+<li>expanded <a href="#eig_gen">eig_gen()</a> and <a href="#eig_pair">eig_pair()</a> to optionally provide left and right eigenvectors</li>
+<li>expanded <a href="#qr">qr()</a> to optionally use pivoted decomposition</li>
+<li>expanded <a href="#save_load_mat">.save()</a> and <a href="#save_load_mat">.load()</a> to handle CSV files with headers via <i>csv_name(filename,header)</i> specification</li>
+<li>more consistent detection of sparse vector expressions</li>
+<li>updated <a href="#constants">physical constants</a> to NIST 2018 CODATA values</li>
+<li>workaround for <a href="#save_load_mat">save/load</a> issues with HDF5 v1.12</li>
 </ul>
 </li>
 <br>
