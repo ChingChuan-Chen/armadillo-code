@@ -218,8 +218,10 @@ op_sort_vec::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_sort_vec>& i
   
   if(out.n_elem <= 1)  { return; }
   
-  eT* start_ptr = &out[0];
-  eT* endp1_ptr = &out[out.n_elem];
+  eT* out_mem = out.memptr();
+  
+  eT* start_ptr =  out_mem;
+  eT* endp1_ptr = &out_mem[out.n_elem];
   
   const uword sort_type = in.aux_uword_a;
   
