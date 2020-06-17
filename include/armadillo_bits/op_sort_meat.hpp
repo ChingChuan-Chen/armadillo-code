@@ -208,7 +208,7 @@ op_sort_vec::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_sort_vec>& i
   
   typedef typename T1::elem_type eT;
   
-  const unwrap<T1>   U(in.m);
+  const unwrap<T1>   U(in.m);  // not using quasi_unwrap, to ensure there is no aliasing with subviews
   const Mat<eT>& X = U.M;
   
   const uword sort_type = in.aux_uword_a;
@@ -216,7 +216,7 @@ op_sort_vec::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_sort_vec>& i
   arma_debug_check( (sort_type > 1), "sort(): parameter 'sort_type' must be 0 or 1" );
   arma_debug_check( (X.has_nan()),   "sort(): detected NaN"                         );
   
-  out = X;
+  out = X;  // not checking for aliasing, to allow inplace sorting of vectors
   
   if(out.n_elem <= 1)  { return; }
   
