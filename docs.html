@@ -2363,110 +2363,109 @@ See also:
 <li>
 Provide access to individual elements or objects stored in a container object
 (ie. <i>Mat</i>, <i>Col</i>, <i>Row</i>, <i>Cube</i>, <i>field</i>)<br>
-                    <br>
+<br>
 <ul>
-                    <table style="text-align: left; width: 100%;"
- border="0" cellpadding="2" cellspacing="2">
-                      <tbody>
-                        <tr>
-                          <td style="vertical-align: top;">
-                          <code>(n)</code>
-                          </td>
-                          <td style="vertical-align: top;">&nbsp;<br>
-                          </td>
-                          <td style="vertical-align: top;">
+<table style="text-align: left; width: 100%;" border="0" cellpadding="2" cellspacing="2">
+<tbody>
+  <tr>
+    <td style="vertical-align: top;">
+    <code>(n)</code>
+    </td>
+    <td style="vertical-align: top;">&nbsp;<br>
+    </td>
+    <td style="vertical-align: top;">
 For <i>vec</i> and <i>rowvec</i>, access the <i>n</i>-th element.
 For <i>mat</i>, <i>cube</i> and <i>field</i>, access the <i>n</i>-th element/object under the assumption of a flat layout,
 with column-major ordering of data (ie. column by column).
 A&nbsp;<i>std::logic_error</i> exception is thrown if the requested element is out of bounds.
 The bounds check can be <a href="#element_access_bounds_check_note">optionally disabled</a> at compile-time to get more speed.
-                          </td>
-                        </tr>
+  </td>
+</tr>
 <tr>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 </tr>
-                        <tr>
-                          <td style="vertical-align: top;">
-                          <code>.at(n)</code>&nbsp;&nbsp;or&nbsp;&nbsp;<code>[n]</code>&nbsp;
-                          </td>
-                          <td style="vertical-align: top;"><br>
-                          </td>
-                          <td style="vertical-align: top;">
+<tr>
+  <td style="vertical-align: top;">
+  <code>.at(n)</code>&nbsp;&nbsp;or&nbsp;&nbsp;<code>[n]</code>&nbsp;
+  </td>
+  <td style="vertical-align: top;"><br>
+  </td>
+  <td style="vertical-align: top;">
 As for <code>(n)</code>, but without a bounds check.
 Not recommended for use unless your code has been thoroughly debugged.
-                          </td>
-                        </tr>
+  </td>
+</tr>
 <tr>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 </tr>
-                        <tr>
-                          <td style="vertical-align: top;">
-                          <code>(i,j)</code>
-                          </td>
-                          <td style="vertical-align: top;"><br>
-                          </td>
-                          <td style="vertical-align: top;">
+<tr>
+  <td style="vertical-align: top;">
+  <code>(i,j)</code>
+  </td>
+  <td style="vertical-align: top;"><br>
+  </td>
+  <td style="vertical-align: top;">
 For <i>mat</i> and <i>2D field</i> classes, access the element/object stored at the <i>i</i>-th row and <i>j</i>-th column.
 A&nbsp;<i>std::logic_error</i> exception is thrown if the requested element is out of bounds.
 The bounds check can be <a href="#element_access_bounds_check_note">optionally disabled</a> at compile-time to get more speed.
-                          </td>
-                        </tr>
+  </td>
+</tr>
 <tr>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 </tr>
-                        <tr>
-                          <td style="vertical-align: top;">
-                          <code>.at(i,j)</code>
-                          </td>
-                          <td style="vertical-align: top;"><br>
-                          </td>
-                          <td style="vertical-align: top;">
+<tr>
+  <td style="vertical-align: top;">
+  <code>.at(i,j)</code>
+  </td>
+  <td style="vertical-align: top;"><br>
+  </td>
+  <td style="vertical-align: top;">
 As for <code>(i,j)</code>, but without a bounds check.
 Not recommended for use unless your code has been thoroughly debugged.
 </td>
-                          <td style="vertical-align: top;"><br>
-                          </td>
-                        </tr>
+  <td style="vertical-align: top;"><br>
+  </td>
+</tr>
 <tr>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 </tr>
-                        <tr>
-                          <td style="vertical-align: top;">
-                          <code>(i,j,k)</code>
-                          </td>
-                          <td style="vertical-align: top;"><br>
-                          </td>
-                          <td style="vertical-align: top;">
+<tr>
+  <td style="vertical-align: top;">
+  <code>(i,j,k)</code>
+  </td>
+  <td style="vertical-align: top;"><br>
+  </td>
+  <td style="vertical-align: top;">
 For <i>cube</i> and <i>3D field</i> classes, access the element/object stored at the <i>i</i>-th row, <i>j</i>-th column and <i>k</i>-th slice.
 A&nbsp;<i>std::logic_error</i> exception is thrown if the requested element is out of bounds.
 The bounds check can be <a href="#element_access_bounds_check_note">optionally disabled</a> at compile-time to get more speed.
-                          </td>
-                        </tr>
+  </td>
+</tr>
 <tr>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 </tr>
-                        <tr>
-                          <td style="vertical-align: top;">
-                          <code>.at(i,j,k)</code>
-                          </td>
-                          <td style="vertical-align: top;"><br>
-                          </td>
-                          <td style="vertical-align: top;">
+<tr>
+  <td style="vertical-align: top;">
+  <code>.at(i,j,k)</code>
+  </td>
+  <td style="vertical-align: top;"><br>
+  </td>
+  <td style="vertical-align: top;">
 As for <code>(i,j,k)</code>, but without a bounds check.
 Not recommended for use unless your code has been thoroughly debugged.</td>
-                        </tr>
-                      </tbody>
-                    </table>
+    </tr>
+  </tbody>
+</table>
 </ul>
 </li>
 <br>
